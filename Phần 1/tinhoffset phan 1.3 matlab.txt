@@ -1,0 +1,7 @@
+--- GIA TRI OFFSET ---
+offset_ax = 1748 
+offset_ay = -60 
+offset_az = -739 
+offset_gx = -479 
+offset_gy = -138 
+offset_gz = -206 
