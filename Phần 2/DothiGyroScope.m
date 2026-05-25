@@ -1,0 +1,80 @@
+data = [0.18,-0.01,-0.08; 0.05,-0.21,0.04; -0.02,-0.22,0.14; -0.16,-0.33,-0.19; ...
+        0.18,0.19,0.14; -0.02,0.02,0.02; -0.03,-0.08,-0.14; 0.05,0.02,0.13; ...
+        -0.10,-0.08,-0.03; -0.17,-0.14,-0.02; 0.01,-0.14,0.04; -0.11,-0.08,0.04; ...
+        0.11,-0.08,0.04; -0.02,0.16,0.08; -0.07,0.11,-0.00; -0.19,-0.22,-0.05; ...
+        0.17,-0.09,-0.02; -0.09,-0.08,0.12; -0.11,0.10,0.04; 0.10,-0.11,0.04; 0.15,-0.04,-0.02];
+
+gx = data(:,1);
+gy = data(:,2);
+gz = data(:,3);
+
+mean_gx = mean(gx);
+mean_gy = mean(gy);
+mean_gz = mean(gz);
+std_gx  = std(gx);
+std_gy  = std(gy);
+std_gz  = std(gz);
+N = size(data, 1);
+fprintf('\n════════════════════════════════════════\n');
+fprintf('  KIỂM CHỨNG GYRO SAU HIỆU CHUẨN\n');
+fprintf('════════════════════════════════════════\n');
+fprintf('  Số mẫu       : %d\n', N);
+fprintf('  Offset X     : -3.68   Offset Y: -1.08   Offset Z: -1.49\n');
+fprintf('────────────────────────────────────────\n');
+
+axes_label = {'Gx', 'Gy', 'Gz'};
+means = [mean_gx, mean_gy, mean_gz];
+stds  = [std_gx,  std_gy,  std_gz];
+
+for i = 1:3
+    if abs(means(i)) < 0.05
+        status = 'DAT';
+    else
+        status = 'CHUA DAT';
+    end
+    fprintf('  %s: mean = %+.3f deg/s   STD = %.3f   [%s]\n', ...
+            axes_label{i}, means(i), stds(i), status);
+end
+fprintf('════════════════════════════════════════\n\n');
+f = figure('Position', [100, 100, 900, 480], 'Color', 'white');
+
+samples = (1:N)';
+fill([1; N; N; 1], [0.05; 0.05; -0.05; -0.05], ...
+     [0.85 1.0 0.85], 'EdgeColor', 'none', 'FaceAlpha', 0.35);
+hold on;
+p1 = plot(samples, gx, 'r-o', 'LineWidth', 1.4, 'MarkerSize', 5, 'MarkerFaceColor', 'r');
+p2 = plot(samples, gy, 'b-s', 'LineWidth', 1.4, 'MarkerSize', 5, 'MarkerFaceColor', 'b');
+p3 = plot(samples, gz, 'Color', [0.2 0.7 0.2], 'LineStyle', '-', ...
+          'Marker', '^', 'LineWidth', 1.4, 'MarkerSize', 5, 'MarkerFaceColor', [0.2 0.7 0.2]);
+plot(samples, repmat(mean_gx, N, 1), 'r--', 'LineWidth', 1);
+plot(samples, repmat(mean_gy, N, 1), 'b--', 'LineWidth', 1);
+plot(samples, repmat(mean_gz, N, 1), '--', 'Color', [0.2 0.7 0.2], 'LineWidth', 1);
+yline( 0.05, '--k', 'LineWidth', 1.5, 'Label', '+0.05 deg/s', ...
+       'LabelHorizontalAlignment', 'right', 'FontSize', 9);
+yline(-0.05, '--k', 'LineWidth', 1.5, 'Label', '-0.05 deg/s', ...
+       'LabelHorizontalAlignment', 'right', 'FontSize', 9);
+yline(0, '-k', 'LineWidth', 0.8, 'Alpha', 0.4);
+text(N + 0.3, mean_gx, sprintf('%.3f', mean_gx), 'Color', 'r',            'FontSize', 9, 'FontWeight', 'bold');
+text(N + 0.3, mean_gy, sprintf('%.3f', mean_gy), 'Color', 'b',            'FontSize', 9, 'FontWeight', 'bold');
+text(N + 0.3, mean_gz, sprintf('%.3f', mean_gz), 'Color', [0.2 0.7 0.2], 'FontSize', 9, 'FontWeight', 'bold');
+title('Vận tốc góc Gyroscope sau khi hiệu chuẩn tự động', ...
+      'FontSize', 13, 'FontWeight', 'bold');
+xlabel('Số mẫu (Sample)', 'FontSize', 11);
+ylabel('Vận tốc góc (deg/s)',  'FontSize', 11);
+legend([p1 p2 p3], ...
+       {sprintf('Gx  (mean=%+.3f)', mean_gx), ...
+        sprintf('Gy  (mean=%+.3f)', mean_gy), ...
+        sprintf('Gz  (mean=%+.3f)', mean_gz)}, ...
+       'Location', 'northeast', 'FontSize', 10);
+xlim([1 N]);
+ylim([-0.45 0.45]);
+xticks(1:N);
+grid on;
+box on;
+set(gca, 'FontSize', 10);
+text(1.3, 0.035, 'Vung dat chuan < 0.05 deg/s', ...
+     'FontSize', 8, 'Color', [0.1 0.5 0.1], 'FontAngle', 'italic');
+hold off;
+
+saveas(f, 'DoThi_Gyro_Calibrated_Phan2_2.png');
+fprintf('Da luu: DoThi_Gyro_Calibrated_Phan2.png\n');
