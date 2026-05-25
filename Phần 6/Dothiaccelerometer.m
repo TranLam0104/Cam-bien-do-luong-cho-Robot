@@ -1,0 +1,32 @@
+data = readmatrix('Dulieuaccelerometer.txt');
+
+roll_acc  = data(:, 1);
+pitch_acc = data(:, 2);
+
+t = (0:length(roll_acc)-1)' * 0.02;
+f1 = figure('Position', [100, 100, 1000, 450]);
+plot(t, roll_acc, 'b-', 'LineWidth', 1.5);
+yline(0,  '--k', '0°',  'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+yline(15, '--c', '15°', 'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+yline(30, '--r', '30°', 'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+yline(45, '--m', '45°', 'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+yline(90, '--g', '90°', 'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+title('6.1 Goc Roll tu Accelerometer  |  roll = atan2(Ay, Az)');
+xlabel('Thoi gian (giay)');
+ylabel('Goc Roll (Do)');
+legend('Roll Accel', 'Location', 'best');
+grid on;
+saveas(f1, 'roll_accel.png');
+f2 = figure('Position', [100, 600, 1000, 450]);
+plot(t, pitch_acc, 'r-', 'LineWidth', 1.5);
+yline(0,  '--k', '0°',  'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+yline(15, '--c', '15°', 'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+yline(30, '--r', '30°', 'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+yline(45, '--m', '45°', 'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+yline(90, '--g', '90°', 'LineWidth', 1, 'LabelHorizontalAlignment', 'left');
+title('6.1 Goc Pitch tu Accelerometer  |  pitch = atan2(-Ax, sqrt(Ay^2+Az^2))');
+xlabel('Thoi gian (giay)');
+ylabel('Goc Pitch (Do)');
+legend('Pitch Accel', 'Location', 'best');
+grid on;
+saveas(f2, 'pitch_accel.png');
